@@ -97,7 +97,7 @@ static PangoAttrList *newmsg_list;
 static PangoAttrList *plain_list = NULL;
 
 static PangoAttrList *
-mg_attr_list_create (GdkColor *col, int size)
+mg_attr_list_create (GdkColor *col, int size, int embolden)
 {
 	PangoAttribute *attr;
 	PangoAttrList *list;
@@ -120,6 +120,11 @@ mg_attr_list_create (GdkColor *col, int size)
 		pango_attr_list_insert (list, attr);
 	}
 
+	attr = pango_attr_weight_new (embolden ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
+	attr->start_index = 0;
+	attr->end_index = 0xffff;
+	pango_attr_list_insert (list, attr);
+
 	return list;
 }
 
@@ -135,11 +140,11 @@ mg_create_tab_colors (void)
 		pango_attr_list_unref (away_list);
 	}
 
-	plain_list = mg_attr_list_create (NULL, prefs.hex_gui_tab_small);
-	newdata_list = mg_attr_list_create (&colors[COL_NEW_DATA], prefs.hex_gui_tab_small);
-	nickseen_list = mg_attr_list_create (&colors[COL_HILIGHT], prefs.hex_gui_tab_small);
-	newmsg_list = mg_attr_list_create (&colors[COL_NEW_MSG], prefs.hex_gui_tab_small);
-	away_list = mg_attr_list_create (&colors[COL_AWAY], FALSE);
+	plain_list = mg_attr_list_create (NULL, prefs.hex_gui_tab_small, FALSE);
+	newdata_list = mg_attr_list_create (&colors[COL_NEW_DATA], prefs.hex_gui_tab_small, TRUE);
+	nickseen_list = mg_attr_list_create (&colors[COL_HILIGHT], prefs.hex_gui_tab_small, TRUE);
+	newmsg_list = mg_attr_list_create (&colors[COL_NEW_MSG], prefs.hex_gui_tab_small, TRUE);
+	away_list = mg_attr_list_create (&colors[COL_AWAY], FALSE, FALSE);
 }
 
 static void
